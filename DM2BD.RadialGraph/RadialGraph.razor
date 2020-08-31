@@ -1,0 +1,41 @@
+﻿@typeparam TItem
+
+@if (Errors.Count == 0)
+{
+    <svg viewBox="0 0 1000 1000">
+        @for (int i = RingCoordinates.Count - 1; i > -1; i--)
+        {
+            List<Coordinate<Node>> ring = RingCoordinates[i];
+            <circle cx="@CenterX" cy="@CenterY" r="@((((Double)(i + 1)) / RingCoordinates.Count) * Radius)" stroke="red" stroke-width="2" fill="transparent" />
+            foreach (Coordinate<Node> coordinate in ring)
+            {
+                <g>     
+                    <circle cx="@coordinate.CoordinateX" cy="@coordinate.CoordinateY" r="10" stroke="orange" stroke-width="2" fill="orange" />
+                    <text style="z-index: 10;" @onclick='(() => { Console.WriteLine($"{coordinate.Item.title} is the new center."); CenterNodeId = coordinate.Item.id; MakeAdjacencyMatrix(); })' x="@coordinate.CoordinateX" y="@coordinate.CoordinateY" text-anchor="middle" fill="blue" font-size="10px">@coordinate.Item.title</text>
+                </g>
+            }
+        }
+        <text x="@CenterX" y="@CenterY" text-anchor="middle" fill="green">@Rings[0][0].title</text>
+    </svg>
+
+    int ringCounter = 0;
+    foreach (List<Node> ring in Rings)
+    {
+        <h1>Ring @(ringCounter++)</h1>
+        <ul>
+            @foreach (Node item in ring)
+            {
+                <li>@item.title</li>
+            }
+        </ul>
+    }
+}
+else
+{
+    <ul style="color: red;">
+        @foreach (string error in Errors)
+        {
+            <li>@error</li>
+        }
+    </ul>
+}
